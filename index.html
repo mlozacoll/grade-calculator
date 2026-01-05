@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Standing Grade Calculator</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; }
+    .card { max-width: 520px; padding: 18px; border: 1px solid #ddd; border-radius: 12px; }
+    label { display: block; margin-top: 12px; font-weight: 600; }
+    input { width: 100%; padding: 10px 12px; font-size: 16px; margin-top: 6px; box-sizing: border-box; }
+    .result { margin-top: 16px; padding: 12px; border-radius: 10px; background: #f6f7f8; }
+    .big { font-size: 22px; font-weight: 700; }
+    .muted { color: #555; font-size: 14px; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Standing Grade Calculator</h2>
+
+    <label for="ex">How many <b>EX</b> points do you have?</label>
+    <input id="ex" type="number" min="0" step="1" placeholder="e.g., 450" />
+
+    <label for="el">How many <b>EL</b> points do you have?</label>
+    <input id="el" type="number" min="0" step="1" placeholder="e.g., 40" />
+
+    <div class="result">
+      <div>Excellent, your standing grade in the class is:</div>
+      <div class="big"><span id="pg">—</span>%</div>
+      <div class="muted" id="details"></div>
+    </div>
+  </div>
+
+  <script>
+    const EXAM_TOTAL = 900;
+
+    function num(x) {
+      // Treat empty/invalid as 0
+      const v = Number(x);
+      return Number.isFinite(v) ? v : 0;
+    }
+
+    function computePG(ex, el) {
+      // PG = ((EX + EL) / (900 + EL)) * 100
+      const denom = EXAM_TOTAL + el;
+      if (denom <= 0) return null;
+      return ((ex + el) / denom) * 100;
+    }
+
+    function update() {
+      const ex = num(document.getElementById("ex").value);
+      const el = num(document.getElementById("el").value);
+
+      const pg = computePG(ex, el);
+      const pgSpan = document.getElementById("pg");
+      const details = document.getElementById("details");
+
+      if (pg === null) {
+        pgSpan.textContent = "—";
+        details.textContent = "";
+        return;
+      }
+
+      // Show 1 decimal place
+      pgSpan.textContent = pg.toFixed(1);
+
+      // Optional transparency line
+      details.textContent = `Using PG = ((EX + EL) / (${EXAM_TOTAL} + EL)) × 100  →  ((${ex} + ${el}) / (${EXAM_TOTAL} + ${el})) × 100`;
+    }
+
+    document.getElementById("ex").addEventListener("input", update);
+    document.getElementById("el").addEventListener("input", update);
+    update();
+  </script>
+</body>
+</html>
