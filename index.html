@@ -26,7 +26,7 @@
 
     <div class="result">
       <div>Excellent, your standing grade in the class is:</div>
-      <div class="big"><span id="pg">—</span>%</div>
+     <div class="big"><span id="pg">—</span>% <span id="lg"></span></div>
       <div class="muted" id="details"></div>
     </div>
   </div>
@@ -46,6 +46,21 @@
       if (denom <= 0) return null;
       return ((ex + el) / denom) * 100;
     }
+    function letterGrade(pg) {
+      if (pg === null || !Number.isFinite(pg)) return "";
+      if (pg < 40) return "F";
+      if (pg < 43) return "D-";
+      if (pg < 52) return "D";
+      if (pg < 55) return "D+";
+      if (pg < 58) return "C-";
+      if (pg < 67) return "C";
+      if (pg < 70) return "C+";
+      if (pg < 73) return "B-";
+      if (pg < 82) return "B";
+      if (pg < 85) return "B+";
+      if (pg < 90) return "A-";
+      return "A";
+    }
 
     function update() {
       const ex = num(document.getElementById("ex").value);
@@ -53,20 +68,24 @@
 
       const pg = computePG(ex, el);
       const pgSpan = document.getElementById("pg");
+      const lgSpan = document.getElementById("lg");
       const details = document.getElementById("details");
 
-      if (pg === null) {
-        pgSpan.textContent = "—";
-        details.textContent = "";
-        return;
-      }
+    if (pg === null) {
+      pgSpan.textContent = "—";
+      lgSpan.textContent = "";
+      details.textContent = "";
+      return;
+  }
 
-      // Show 1 decimal place
-      pgSpan.textContent = pg.toFixed(1);
+  pgSpan.textContent = pg.toFixed(1);
+  lgSpan.textContent = `(${letterGrade(pg)})`;
 
-      // Optional transparency line
-      details.textContent = `Using PG = ((EX + EL) / (${EXAM_TOTAL} + EL)) × 100  →  ((${ex} + ${el}) / (${EXAM_TOTAL} + ${el})) × 100`;
-    }
+  details.textContent =
+    `Using PG = ((EX + EL) / (${EXAM_TOTAL} + EL)) × 100  →  ` +
+    `((${ex} + ${el}) / (${EXAM_TOTAL} + ${el})) × 100`;
+}
+
 
     document.getElementById("ex").addEventListener("input", update);
     document.getElementById("el").addEventListener("input", update);
