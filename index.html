@@ -66,6 +66,13 @@
       const ex = num(document.getElementById("ex").value);
       const el = num(document.getElementById("el").value);
 
+      if (ex === 0 && el === 0) {
+        pgSpan.textContent = "—";
+        lgSpan.textContent = "";
+        details.textContent = "";
+        return;
+      }
+
       const pg = computePG(ex, el);
       const pgSpan = document.getElementById("pg");
       const lgSpan = document.getElementById("lg");
@@ -76,7 +83,7 @@
       lgSpan.textContent = "";
       details.textContent = "";
       return;
-  }
+      }
 
   pgSpan.textContent = pg.toFixed(1);
   lgSpan.textContent = `(${letterGrade(pg)})`;
@@ -84,7 +91,7 @@
   details.textContent =
     `Using PG = ((EX + EL) / (${EXAM_TOTAL} + EL)) × 100  →  ` +
     `((${ex} + ${el}) / (${EXAM_TOTAL} + ${el})) × 100`;
-}
+    }
 
 
     document.getElementById("ex").addEventListener("input", update);
